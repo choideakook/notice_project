@@ -36,5 +36,8 @@ public class CategoryRepository {
                 .getResultList();
     }
 
-    //-- update name --//
+    //-- delete --//
+    public void delete(Category category) {
+        em.remove(category);
+    }
 }
