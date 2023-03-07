@@ -25,5 +25,6 @@ class ProfileRepositoryTest {
         assertThat(findProfile.getName()).isEqualTo("notice");
         assertThat(findProfile.getSns()[0]).isEqualTo("facebook");
         assertThat(findProfile.getSns()[1]).isEqualTo("instagram");
+        assertThat(findProfile.getId()).isEqualTo(profile.getId());
     }
 }

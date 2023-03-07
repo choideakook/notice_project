@@ -25,7 +25,7 @@ class CategoryRepositoryTest {
     private Profile createProfile () {
         Profile profile = Profile.createProfile("notice", "desc", "facebook");
         profileRepository.save(profile);
-        Profile findProfile = profileRepository.findOne(1L);
+        Profile findProfile = profileRepository.findOne(profile.getId());
         return findProfile;
     }
 
@@ -35,7 +35,7 @@ class CategoryRepositoryTest {
         Category category = Category.createCategory(profile, name);
         categoryRepository.save(category);
 
-        return categoryRepository.findOne(2L);
+        return categoryRepository.findOne(category.getId());
     }
 
     @Test
@@ -44,7 +44,7 @@ class CategoryRepositoryTest {
         Category category = Category.createCategory(profile, "java");
         categoryRepository.save(category);
 
-        Category findCategory = categoryRepository.findOne(2L);
+        Category findCategory = categoryRepository.findOne(category.getId());
 
         assertThat(findCategory.getProfile()).isSameAs(profile);
         assertThat(findCategory.getName()).isEqualTo("java");
