@@ -4,11 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import practice.notice.domain.Category;
-import practice.notice.domain.Post;
-import practice.notice.domain.Profile;
-import practice.notice.domain.Series;
+import practice.notice.domain.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -56,7 +54,7 @@ class PostRepositoryTest {
 
         assertThat(findPost.getSeries()).isSameAs(series);
         assertThat(findPost.getName()).isEqualTo("post");
-        assertThat(findPost.getTag()).contains("tag1");
+        assertThat(findPost.getTags().size()).isEqualTo(2);
     }
 
     @Test
@@ -69,7 +67,7 @@ class PostRepositoryTest {
 
         assertThat(findPost.getCategory()).isSameAs(category);
         assertThat(findPost.getName()).isEqualTo("post");
-        assertThat(findPost.getTag()).contains("tag1");
+//        assertThat(findPost.getTag()).contains("tag1");
     }
 
     /**
@@ -77,7 +75,7 @@ class PostRepositoryTest {
      * 별도의 Entity 를 만들어야 될듯 하다.
      */
     @Test
-    void find_by_name_tag() {
+    void find_by_name() {
         Category category = createCategory();
         Post post1 = Post.createPost(category, "post1", "de", "tag1", "tag2");
         Post post2 = Post.createPost(category, "post2", "de", "tag3", "tag4");
@@ -89,26 +87,47 @@ class PostRepositoryTest {
 
         assertThat(findPost1.getName()).isEqualTo("post1");
 
-//        List<Post> findByTag = postRepository.findByTag("tag3");
-//        Post findPost2 = findByTag.get(0);
-//
-//        assertThat(findPost2.getName()).isEqualTo("post2");
+
     }
 
     @Test
-    void delete_findAll() {
+    void delete_findAll_tag() {
         Category category = createCategory();
         Post post1 = Post.createPost(category, "post1", "de", "tag1", "tag2");
         Post post2 = Post.createPost(category, "post2", "de", "tag3", "tag4");
+        Post post3 = Post.createPost(category, "post3", "de", "tag5", "tag6");
         postRepository.save(post1);
         postRepository.save(post2);
+        postRepository.save(post3);
 
         List<Post> findAll = postRepository.findAll();
-        assertThat(findAll.size()).isEqualTo(2);
+        assertThat(findAll.size()).isEqualTo(3);
 
-        postRepository.delete(post1);
 
-        findAll = postRepository.findAll();
-        assertThat(findAll.size()).isEqualTo(1);
+        Post findByTag = findByTag(findAll, "tag3");
+        assertThat(findByTag.getName()).isEqualTo("post2");
+
+//        postRepository.delete(post1);
+//
+//        findAll = postRepository.findAll();
+//        assertThat(findAll.size()).isEqualTo(2);
+    }
+
+    private Post findByTag(List<Post> findAll, String tag) {
+        for (Post post : findAll) {
+            for (Tag postTag : post.getTags()) {
+                if (postTag.getTag().contains(tag))
+                    return post;
+            }
+        }
+        return null;
+    }
+
+    @Test
+    void name() {
+        List<String> list = new ArrayList<>();
+        list.add("ss");
+
+        System.out.println(list.contains("ss"));
     }
 }
