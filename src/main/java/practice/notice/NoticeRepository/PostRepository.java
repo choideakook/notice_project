@@ -31,9 +31,20 @@ public class PostRepository {
     }
 
     //-- find by tag --//
+    public List<Post> findByTag(String tag) {
+        return em.createQuery("select p from Post p where p.tag =: tag", Post.class)
+                .setParameter("tag", tag)
+                .getResultList();
+    }
 
     //-- find all --//
+    public List<Post> findAll() {
+        return em.createQuery("select p from Post p", Post.class)
+                .getResultList();
+    }
 
     //-- delete --//
-
+    public void delete(Post post) {
+        em.remove(post);
+    }
 }
