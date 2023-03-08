@@ -107,10 +107,10 @@ class PostRepositoryTest {
         Post findByTag = findByTag(findAll, "tag3");
         assertThat(findByTag.getName()).isEqualTo("post2");
 
-//        postRepository.delete(post1);
-//
-//        findAll = postRepository.findAll();
-//        assertThat(findAll.size()).isEqualTo(2);
+        postRepository.delete(post1);
+
+        findAll = postRepository.findAll();
+        assertThat(findAll.size()).isEqualTo(2);
     }
 
     private Post findByTag(List<Post> findAll, String tag) {
