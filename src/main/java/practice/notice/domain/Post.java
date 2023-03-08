@@ -6,7 +6,10 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PROTECTED;
 
@@ -22,8 +25,10 @@ public class Post {
 
     private String name;
     private String desc;
-    private String[] tag = new String[5];
     private LocalDateTime postDate;
+
+    @OneToMany(mappedBy = "post", cascade = ALL)
+    private List<Tag> tags = new ArrayList<>();
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "category_id")
@@ -44,29 +49,38 @@ public class Post {
         series.getPosts().add(this);
     }
 
+    private void setTags(Tag tags) {
+        this.tags.add(tags);
+        tags.cascadePost(this);
+    }
+
     //-- create method --//
     // to Category
-    public static Post createPost(Category category, String name, String desc, String... tag) {
+    public static Post createPost(Category category, String name, String desc, String... tags) {
         Post post = new Post();
         post.name = name;
         post.desc = desc;
         post.postDate = LocalDateTime.now();
         post.setCategory(category);
-        for (int i = 0; i < tag.length; i++) {
-            post.tag[i] = tag[i];
+
+        for (String tagging : tags) {
+            Tag tag = Tag.createTag(tagging);
+            post.setTags(tag);
         }
         return post;
     }
 
     // to Series
-    public static Post createPost(Series series, String name, String desc, String... tag) {
+    public static Post createPost(Series series, String name, String desc, String... tags) {
         Post post = new Post();
         post.name = name;
         post.desc = desc;
         post.postDate = LocalDateTime.now();
         post.setSeries(series);
-        for (int i = 0; i < tag.length; i++) {
-            post.tag[i] = tag[i];
+
+        for (String tagging : tags) {
+            Tag tag = Tag.createTag(tagging);
+            post.setTags(tag);
         }
         return post;
     }
